@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            padding: 0;
+            margin: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        #indicator {
+            position: absolute;
+            height: 88px;
+            width: 320px;
+            background: white;
+            opacity: 0;
+            transition: background .2s, opacity .2s;
+            -webkit-transition: background .2s, opacity .2s;
+        }
+
+        #maincontent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #5a5a5a;
+        }
+
+        #like {
+            position: absolute;
+            left: 50%;
+            margin-left: -44px;
+            top: 200px;
+            transform: rotate(-15deg);
+            -ms-transform: rotate(-15deg); /* IE 9 */
+            -webkit-transform: rotate(-15deg); /* Opera, Chrome, and Safari */
+            opacity: 0;
+            transition: background .2s, opacity .2s, top .5s;
+            -webkit-transition: background .2s, opacity .2s;
+        }
+
+        #logo {
+            position: absolute;
+            width: 60px;
+            background: black;
+            right: 0;
+            border-radius: 0 0 0 8px;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .card {
+            position: absolute;
+            bottom:15px;
+            top: 70px;
+            width: 90%;
+            margin-left: 5%;
+            margin-right: 5%;
+            border-radius: 5px;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity .3s;
+            -webkit-transition: opacity .3s;
+            -moz-transition: opacity .3s;
+        }
+
+        #card1 {
+            background: #75C6FF;
+        }
+
+        #card2 {
+            background: #ECFF99;
+        }
+
+        #card3 {
+            background: #FFA1E4;
+        }
+
+        #search {
+            width: 100%;
+            background: rgba(0, 0, 0, .8);
+            height: 480px;
+            position: absolute;
+            top: -462px;
+            color: #cecece;
+            text-align: center;
+            transition: top .3s;
+            -webkit-transition: top .3s;
+            -moz-transition: top .3s;
+        }
+    </style>
+</head>
+<body>
+<div id="maincontent">
+    <div class="card" id="card1" sequence="1">
+        <h2>card 1</h2>
+    </div>
+    <div class="card" id="card2" sequence="2">
+        <h2>card 2</h2>
+    </div>
+    <div class="card" id="card3" sequence="3">
+        <h2>card 3</h2>
+    </div>
+
+    <div id="search">
+        search panel
+        <div style="position:absolute;bottom:0;margin:auto;left:50%;margin-left:-4.5px;">
+            =
+        </div>
+    </div>
+
+
+</div>
+<div id="indicator"></div>
+<div id="like">
+    <i class="fa fa-thumbs-up" style="color:#87FFB9;font-size:100px;"></i>
+</div>
+<div id="logo">
+    <img src="molecule_logo.png">
+</div>
+
+
+</body>
+
+<script>
+    var theTouch = new Array(); //0 = touch start X, 1 = touch start Y, 2 = touch current X, 3 = touch current Y
+    var radius = 100;
+    var search_open = false;
+
+
+    function startup() {
+        var el = document.getElementById("maincontent");
+        el.addEventListener("touchstart", handleStart, false);
+        el.addEventListener("touchend", handleEnd, false);
+//        el.addEventListener("touchcancel", handleCancel, false);
+//        el.addEventListener("touchleave", handleEnd, false);
+        el.addEventListener("touchmove", handleMove, false);
+
+        //card initialization
+        document.getElementById("card1").style.opacity = 1;
+
+        console.log("initialized.");
+    }
+
+    function handleStart(e) {
+        event.preventDefault();
+//        console.log("touchstart");
+//        console.log("(" + e.touches[0].clientX + ", " + e.touches[0].clientY + ")");
+        theTouch[0] = e.touches[0].clientX;
+        theTouch[1] = e.touches[0].clientY;
+    }
+
+
+    //return true/false if distance > R and within the arc, as well as which quadrant the event triggered
+    //return which quadrant should be triggered (or maybe trigger directly)
+    function handleEnd(e) {
+        event.preventDefault();
+//        console.log("touchend");
+//        console.log(theTouch[2] + ", "+theTouch[3]);
+        var dist_obj = calculate_distance();
+
+        //execute function
+        if (dist_obj[2] == true) { //over threshold
+            switch (dist_obj[1]) {
+                case 0: //like
+                        if(search_open == true){
+                            toggle_search(-1);
+                        }
+                    break;
+                case 1: //previous card
+                    change_card(-1);
+                    break;
+                case 2: //toggle searchbar
+                        toggle_search(1);
+                    break;
+                case 3: //next card
+                    change_card(1);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        resetIndicators(-1);
+    }
+
+    //returns dist_obj array, [0] = distance, [1] = quadrant, [2] = true if over radius threshold
+    function calculate_distance() {
+        var overR = false;
+        var distance = Math.sqrt(Math.pow(theTouch[2] - theTouch[0], 2) + Math.pow(theTouch[3] - theTouch[1], 2));
+        var adjacent = theTouch[2] - theTouch[0];
+        var opposite = theTouch[3] - theTouch[1];
+        var degrees = (180 / Math.PI) * Math.atan2(opposite, adjacent);
+        if (degrees < 0) {
+            degrees += 360;
+        }
+
+        var quadrant = -1;
+        if (degrees > 225 && degrees <= 315) {
+            quadrant = 0;
+        }
+        if (degrees > 315 || degrees <= 45) {
+            quadrant = 1;
+        }
+        if (degrees > 45 && degrees <= 135) {
+            quadrant = 2;
+        }
+        if (degrees > 135 && degrees <= 225) {
+            quadrant = 3;
+        }
+
+        if (distance > radius) {
+            overR = true;
+        }
+
+//        console.log(distance);
+//        console.log(degrees + " degrees");
+//        console.log(quadrant);
+
+        var dist_obj = new Array();
+        dist_obj[0] = distance;
+        dist_obj[1] = quadrant;
+        dist_obj[2] = overR;
+
+        return dist_obj;
+    }
+
+
+    function resetIndicators(quadrant) {
+        if (quadrant != 0) {
+            like.style.opacity = "0";
+            like.style.top = "200px";
+        }
+        indicator.style.background = "white";
+        indicator.style.opacity = "0";
+    }
+
+    var indicator = document.getElementById("indicator");
+    var like = document.getElementById("like");
+    function handleMove(e) {
+        event.preventDefault();
+//        console.log("touchmove");
+//        console.log("("+e.touches[0].clientX+", "+ e.touches[0].clientY+")");
+        theTouch[2] = e.touches[0].clientX;
+        theTouch[3] = e.touches[0].clientY;
+        var dist_obj = calculate_distance();
+        //calculate opacity based on distance if threshold = false
+        var color;
+        switch (dist_obj[1]) {
+            case 0:
+                resetIndicators(0);
+                color = "#75C6FF";
+                if (search_open == false) {
+                    if (dist_obj[2] == false) {
+                        var percentOpacity = dist_obj[0] / radius * 0.4;
+                        like.style.opacity = percentOpacity;
+                        var top = 200 - dist_obj[0];
+                        like.style.top = top + "px";
+                    }
+                    else {
+                        like.style.opacity = "1";
+                    }
+                }
+                break;
+            case 1:
+                resetIndicators(1);
+                color = "#ECFF99";
+                break;
+            case 2:
+                resetIndicators(2);
+                color = "#87FFB9";
+                break;
+            case 3:
+                resetIndicators(3);
+                color = "#FFA1E4";
+                break;
+            default:
+                color = "white";
+                break;
+        }
+    }
+
+    //change card forward or back | -1 to go back, 1 to go forward
+    var current_card = 1;
+    function change_card(a) {
+        if (a == 1 || a == -1) { //only accept 1 or -1 as valid
+            var temp = current_card;
+            current_card += a;
+            if (current_card >= 4) {
+                current_card = 1;
+            }
+            if (current_card <= 0) {
+                current_card = 3;
+            }
+            var prev_card = document.getElementById("card" + temp);
+            prev_card.style.opacity = 0;
+            var next_card = document.getElementById("card" + current_card);
+            next_card.style.opacity = 1;
+        }
+        else {
+            return false;
+        }
+    }
+
+    //-1 to hide tray, 1 to display tray
+    var search_tray = document.getElementById("search");
+    function toggle_search(a){
+        if(a == -1){
+            search_tray.style.top = "-462px";
+            search_open = false;
+        }
+        else if(a == 1){
+            search_tray.style.top = "0px";
+            search_open = true;
+        }
+    }
+
+    startup();
+</script>
+
+</html>

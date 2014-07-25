@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Device Properties Example</title>
+    
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  </head>
+  <body>
+      <p id="output">Loading output...</p>
+      <br>
+      <p id="input">Loading input...</p>
+       <br>
+      <p id="sideput">Loading sideput...</p>
+      <script>
+
+    
+var key = "130ce75a704544ad9007ea0d381c1d6b";
+    var endpoint = "http://freegeoip.net/json/98.190.221.98";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", endpoint, false);
+    xhr.send();
+    var jsonp = JSON.parse(xhr.responseText);
+    console.log(jsonp);
+    var jstring = JSON.stringify(jsonp);
+    document.getElementById("output").innerHTML = JSON.stringify(jsonp);
+    $('#input').html("Farting Knuckle pops");
+
+
+</script>
+<script>
+    
+if (typeof jQuery !== 'undefined') {
+        alert("check your console log for extractor output");
+        $(document).ready(function() {
+            alert("page is ready");
+                $.ajax({// ajax call starts
+                    url: 'http://ec2-54-82-196-199.compute-1.amazonaws.com/php_includes/stream_generator_api.php', // JQuery loads serverside.php
+//                    url: 'http://ec2-54-82-196-199.compute-1.amazonaws.com/app_parsers/user_authentication.php',
+                    data: {
+//                        e: 'TessierAshpool',
+//                        p: 'sunny123',
+//                        e:'zacktest',
+//                        p:'zacktest'
+                        id_token: '45385936',
+                        username: 'TessierAshpool',
+//                        username: 'zacktest',
+                        app_filter_array: '',
+                        stream_media_type: 'mixed',
+                        current_id_list: '',
+                        scope: 'tribe',
+                        infinite: 'no',
+                        splode_status: 'mixed',
+                        trigger: 'fresh_load',
+                        page_owner: ''
+                    },
+                        
+                        // Send value of the clicked button
+                    dataType: 'json', // Choosing a JSON datatype
+                    success: function(data) // Variable data contains the data we get from serverside
+                    {
+                        
+                            alert("success"); 
+                            var sideput = JSON.stringify(data);
+                            alert(sideput);
+                            document.getElementById("sideput").innerHTML = sideput;//these dom manipulators dont work...
+                            $('#input').html(sideput);//this one either
+                        
+                    }
+                });
+                return false; // keeps the page from not refreshing 
+            });
+        } else {
+            alert("jQuery library is not found. Run again bookmarklet again please.");
+        }
+</script>
+  </body>
+  
+</html>

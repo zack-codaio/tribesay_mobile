@@ -1,42 +1,151 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>
+<html lang="en" ng-app="tribeApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="tribeApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="tribeApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="tribeApp" class="no-js"> <!--<![endif]-->
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
-  <link rel="stylesheet" href="css/app.css"/>
-  <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TribeSay Mobile</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+    <link rel="stylesheet" href="css/app.css"/>
+    <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>-->
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>-->
+
+
 </head>
-<body>
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-  </ul>
+<body ng-controller="CardCtrl">
 
-  <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
 
-  <div ng-view></div>
+<div id="maincontent" >
+    <div class="card" id="card{{$index}}" sequence="{{$index}}" ng-repeat="card in cards | orderBy:orderProp">
+        <div class="likes_comments">
+            <i class="fa fa-thumbs-up" style="color:#4eca0e;color:#e9e9e9;"></i> {{card.vote_state}}
+            &nbsp;
+            <i class="fa fa-comments"></i> 10
+        </div>
+        <div class="img_contain" style="background-image:url({{card.imageSource}})">
+            <!--<img class="card_img" src="{{card.imageSource}}">-->
+        </div>
+        <div class="card_info">
+            <h3>{{card.title}}</h3>
 
-  <div>Angular seed app: v<span app-version></span></div>
+            <div ng-hide="{{card.tag1}} === null" class="tag">{{card.tag1}}</div>
+            <div ng-hide="{{card.tag2}} === null" class="tag">{{card.tag2}}</div>
+            <div ng-hide="{{card.tag3}} === null" class="tag">{{card.tag3}}</div>
+            <div ng-hide="{{card.tag4}} === null" class="tag">{{card.tag4}}</div>
+            <div ng-hide="{{card.tag5}} === null" class="tag">{{card.tag5}}</div>
+            <div class="down_chevron" ng-if="card.media = 'article'">
+                <!--{{card.media}}-->
+                <i class="fa fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/services.js"></script>
-  <script src="js/controllers.js"></script>
-  <script src="js/filters.js"></script>
-  <script src="js/directives.js"></script>
+    <div id="search">
+        <i class="fa fa-search"></i><input type="text" style="" class="search_field" name="search_field"
+                                           model="search_field">
+        <!--{{username}}-->
+        <!--if signed in-->
+        <div ng-show="username" style="margin-top:40px;">
+            <div class="menu_block">
+                <i class="fa fa-inbox"></i><br>
+                Notifications
+            </div>
+            <div class="menu_block">
+                <i class="fa fa-user"></i><br>
+                {{username}}
+            </div>
+            <div class="menu_block">
+                <i class="fa fa-tags"></i><br>
+                Recent Tags
+            </div>
+            <div class="menu_block" ng-click="submit()" ng-controller="logoutController">
+                <i class="fa fa-sign-out"></i><br>
+                Log Out
+            </div>
+
+        </div>
+        <!--end if signed in-->
+
+        <!--if not signed in-->
+        <!--log into existing account-->
+        <div ng-show="!username">
+        Already have an account? Sign In:
+        <form ng-submit="submit()" ng-controller="loginController">
+            <input type="text" style="" class="signup_field" name="login_username_or_email" placeholder="Username or Email" ng-model="formData.name">
+            <input type="password" style="" class="signup_field" name="login_password" placeholder="Password" ng-model="formData.password">
+            <input type="submit" value="submit">
+        </form>
+        </div>
+
+        <!--create new account-->
+        <div ng-show="!username">
+        Create a new account:
+        <form ng-submit="submit()" ng-controller="signupController">
+        <input type="text" style="" class="signup_field" name="signup_username" placeholder="Username" ng-model="formData.username">
+        <input type="text" style="" class="signup_field" name="signup_email" placeholder="Email" ng-model="formData.email">
+        <input type="password" style="" class="signup_field" name="signup_password1" placeholder="Password" ng-model="formData.password1">
+        <input type="password" style="" class="signup_field" name="signup_password2" placeholder="Confirm Password" ng-model="formData.password2">
+            <input type="submit" value="submit">
+        </form>
+        </div>
+        <!--end if not signed in-->
+
+        <div style="position:absolute;bottom:0;margin:auto;left:50%;margin-left:-4.5px;">
+            =
+        </div>
+    </div>
+</div>
+<div id="indicator"></div>
+<div id="like">
+    <i class="fa fa-thumbs-up" style="color:#00940a;font-size:100px;"></i>
+</div>
+<div id="logo">
+    <img src="molecule_logo.png">
+</div>
+
+
+<!-- In production use:
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+-->
+<script src="js/touch_handler.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="js/app.js"></script>
+<script src="js/services.js"></script>
+<script src="js/controllers.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/directives.js"></script>
+
 </body>
+<!--<script>-->
+    <!--var key = "130ce75a704544ad9007ea0d381c1d6b";-->
+    <!--var endpoint = "http://freegeoip.net/json/98.190.221.98";-->
+    <!--var xhr = new XMLHttpRequest();-->
+    <!--xhr.open("GET", endpoint, false);-->
+    <!--xhr.send();-->
+    <!--var jsonp = JSON.parse(xhr.responseText);-->
+    <!--console.log(jsonp);-->
+    <!--var jstring = JSON.stringify(jsonp);-->
+    <!--//        document.getElementById("output").innerHTML = JSON.stringify(jsonp);-->
+    <!--//        $('#input').html("Farting Knuckle pops");-->
+<!--</script>-->
+
 </html>
