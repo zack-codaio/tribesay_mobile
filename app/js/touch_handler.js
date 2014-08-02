@@ -2,6 +2,9 @@
  * Created by zackaman on 7/15/14.
  */
 
+//    this file is currently not included in index.html - trying to deprecate
+
+
 var theTouch = new Array(); //0 = touch start X, 1 = touch start Y, 2 = touch current X, 3 = touch current Y
 var radius = 100;
 var search_open = false;
@@ -108,6 +111,8 @@ function calculate_distance() {
 
 
 function resetIndicators(quadrant) {
+    var indicator = document.getElementById("indicator");
+    var like = document.getElementById("like");
     if (quadrant != 0) {
         like.style.opacity = "0";
         like.style.top = "200px";
@@ -116,9 +121,10 @@ function resetIndicators(quadrant) {
     indicator.style.opacity = "0";
 }
 
-var indicator = document.getElementById("indicator");
-var like = document.getElementById("like");
+
 function handleMove(e) {
+    var indicator = document.getElementById("indicator");
+    var like = document.getElementById("like");
     event.preventDefault();
 //        console.log("touchmove");
 //        console.log("("+e.touches[0].clientX+", "+ e.touches[0].clientY+")");
@@ -180,8 +186,10 @@ function change_card(a) {
         }
         var prev_card = document.getElementById("card" + temp);
         prev_card.style.opacity = 0;
+        prev_card.style.zIndex = 1;
         var next_card = document.getElementById("card" + current_card);
         next_card.style.opacity = 1;
+        next_card.style.zIndex = 999999;
 //        console.log(current_card);
     }
     else {
@@ -190,8 +198,9 @@ function change_card(a) {
 }
 
 //-1 to hide tray, 1 to display tray
-var search_tray = document.getElementById("search");
+
 function toggle_search(a){
+    var search_tray = document.getElementById("search");
     if(a == -1){
         search_tray.style.top = "-462px";
         search_open = false;

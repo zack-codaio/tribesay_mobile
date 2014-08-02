@@ -2,15 +2,19 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('tribeApp', [
+var tribeApp = angular.module('tribeApp', [
   'ngRoute',
   'tribeApp.filters',
   'tribeApp.services',
   'tribeApp.directives',
-  'tribeApp.controllers'
+  'tribeApp.controllers',
+        'ngTouch',
+        'ngAnimate'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
-  $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  $routeProvider.when('/cards', {templateUrl: 'partials/card_view.html', controller: 'CardCtrl'});
+  $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'loginController'});
+  $routeProvider.when('/article/:id', {templateUrl: 'partials/article.html', controller: 'articleController'});
+  $routeProvider.when('/comments/:id', {templateUrl: 'partials/comments.html', controller: 'commentsController'});
+  $routeProvider.otherwise({redirectTo: '/cards'});
 }]);

@@ -1,0 +1,29 @@
+<div class="login_div" >
+    <img src="img/molecule_logo.png" style="width:80px;">
+    <h2 style="margin-top:0px;">Tribesay</h2>
+
+    <!--create new account-->
+    <div ng-hide="account">
+        Create a new account:
+        <form ng-submit="submit()" ng-controller="signupController">
+            <input type="text" style="" class="signup_field" name="signup_username" placeholder="Username" ng-model="formData.username">
+            <input type="text" style="" class="signup_field" name="signup_email" placeholder="Email" ng-model="formData.email">
+            <input type="password" style="" class="signup_field" name="signup_password1" placeholder="Password" ng-model="formData.password1">
+            <input type="password" style="" class="signup_field" name="signup_password2" placeholder="Confirm Password" ng-model="formData.password2">
+            <input type="submit" value="submit" class="form_button">
+        </form>
+    </div>
+
+    <div ng-click="existing_account()">Already have an account? Sign In</div>
+    <!--log into existing account-->
+    <div ng-show="account">
+
+        <form ng-submit="submit()">
+            <input type="text" style="" class="signup_field" name="login_username_or_email" placeholder="Username or Email" ng-model="formData.name">
+            <input type="password" style="" class="signup_field" name="login_password" placeholder="Password" ng-model="formData.password">
+            <input type="submit" value="submit" class="form_button">
+        </form>
+        <div ng-click="create_account()">Or, create a new account</div>
+    </div>
+
+</div>
