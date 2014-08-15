@@ -267,6 +267,7 @@ function articleController($scope, $location, $http, $routeParams, $sce) { //rou
 
     $scope.title;
     $scope.text = "asdfa";
+    $scope.id = id;
 
     //test for article text
     $http({
@@ -285,27 +286,31 @@ function articleController($scope, $location, $http, $routeParams, $sce) { //rou
             $scope.text = angular.element('<div>' + $scope.text + '</div>').text();
             $scope.trustedHTML = $sce.trustAsHtml($scope.text);
             console.log($scope.text);
-
-
         })
 
 }
 
-function commentsController($scope, $location, $http){
+function commentsController($scope, $location, $http, $routeParams, $sce){
     var id = $routeParams.id;
     console.log(id);
 
     $scope.title;
     $scope.text = "asdfa";
+    $scope.id = id;
 
     //test for article text
     $http({
-        url: get_article_url,
+        url: get_comments_url,
         method: "GET",
         params: {
-            article_id: id,
+            content_id: id,
+            parent_id: id,
             username: localStorage.getItem('username'),
-            id_token: localStorage.getItem('id_token')
+            id_token: localStorage.getItem('id_token'),
+            timing: 'initial',
+            action: 'retrieve_comments',
+            level: 0,
+            sibling_id: 1
         }
     })
         .success(function (data) {
@@ -327,7 +332,7 @@ loginController.$inject = ['$scope', '$http', 'authenticationService', '$locatio
 signupController.$inject = ['$scope', '$http', 'authenticationService'];
 logoutController.$inject = ['$scope', 'authenticationService', '$location'];
 articleController.$inject = ['$scope', '$location', '$http', '$routeParams', '$sce'];
-commentsController.$inject = ['$scope', '$location', '$http'];
+commentsController.$inject = ['$scope', '$location', '$http', '$routeParams', '$sce'];
 
 //service
 tribeApp.factory('authenticationService', function ($rootScope) {
